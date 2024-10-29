@@ -1,0 +1,200 @@
+version: 0.7.5
+ironic:
+  db:
+    password: WURiYTdwVXBMZG1vMXloeGsycVdtQzNDOUIwMkt6dzQ=
+switch:
+  leaf-01:
+    api: https://10.42.10.201/
+    username: admin
+    password: woxvkwOVpxpf6YFAtrHe
+node:
+  node-01:
+    bmcaddress: redfish-virtualmedia+https://10.42.10.101:8443/redfish/v1/Systems/f399f78a-22b5-4752-9638-098902db773f
+    bootmode: legacy
+    type: controlplane
+    mgmt_macaddress: 02:a0:3d:2b:38:00
+    cluster_mac_addresses:
+      bond: 02:a0:3d:2b:38:00
+      eths:
+      - 02:a0:3d:2b:38:00
+    nodesecret:
+      user: wb823V4kLNvIzMK678CP
+      password: YK3dNzv3vu7bQwUjwy4C
+  node-02:
+    bmcaddress: redfish-virtualmedia+https://10.42.10.102:8443/redfish/v1/Systems/a0a202cf-9a3c-4fdf-abb1-8df8107a8c49
+    bootmode: legacy
+    type: worker
+    mgmt_macaddress: 02:f0:42:ed:be:00
+    cluster_mac_addresses:
+      bond: 02:f0:42:ed:be:00
+      eths:
+      - 02:f0:42:ed:be:00
+    nodesecret:
+      user: hCq1qkL2kG2dwiOTIPMH
+      password: 1b6PF9cuLHDnlqw0Qxtp
+  node-03:
+    bmcaddress: redfish-virtualmedia+https://10.42.10.103:8443/redfish/v1/Systems/eb0a31a2-11b5-41e4-a392-24465a5b0113
+    bootmode: legacy
+    type: worker
+    mgmt_macaddress: 02:e0:4f:81:37:00
+    cluster_mac_addresses:
+      bond: 02:e0:4f:81:37:00
+      eths:
+      - 02:e0:4f:81:37:00
+    nodesecret:
+      user: Ulz8nZ3k72n5JmgmQ44C
+      password: qK6QuXrSjgPb2r1ooWxg
+  node-04:
+    bmcaddress: redfish-virtualmedia+https://10.42.10.104:8443/redfish/v1/Systems/44e684a0-5ff5-4608-8d4e-5fdfb43d3f26
+    bootmode: legacy
+    type: worker
+    mgmt_macaddress: 02:40:4e:6c:ce:00
+    cluster_mac_addresses:
+      bond: 02:40:4e:6c:ce:00
+      eths:
+      - 02:40:4e:6c:ce:00
+    nodesecret:
+      user: 9RVeVH59dZA6x2Rvd0Zg
+      password: SCQtkHTRnD0lJKEuZ6p5
+  node-05:
+    bmcaddress: redfish-virtualmedia+https://10.42.10.105:8443/redfish/v1/Systems/3cd50d94-98b1-4184-97cc-ec301951c94d
+    bootmode: legacy
+    type: worker
+    mgmt_macaddress: 02:30:d6:25:58:00
+    cluster_mac_addresses:
+      bond: 02:30:d6:25:58:00
+      eths:
+      - 02:30:d6:25:58:00
+    nodesecret:
+      user: Qy3D0raYk660WaliJhqL
+      password: MPRqUpv4JKrOSe9m5FeU
+  node-06:
+    bmcaddress: redfish-virtualmedia+https://10.42.10.106:8443/redfish/v1/Systems/f43768b4-ba3d-4700-acd3-f1f07142d6f7
+    bootmode: legacy
+    type: worker
+    mgmt_macaddress: 02:b0:b2:5d:b1:00
+    cluster_mac_addresses:
+      bond: 02:b0:b2:5d:b1:00
+      eths:
+      - 02:b0:b2:5d:b1:00
+    nodesecret:
+      user: XPsnuDP1KhcrlHjXDiiQ
+      password: XyEoRxznVXoUdBBOjiLT
+cluster:
+  static_executables:
+    /etc/networkd-dispatcher/routable.d/99-umetal-env-checksumming: |-
+      #!/bin/bash
+
+      echo "Disable rx/tx-checksumming and generic segmentation offload for $IFACE ($OperationalState)"
+      /sbin/ethtool -K "$IFACE" rx off tx off tso off
+  namespace: workload
+  name: workload
+  controlplane:
+    machinecount: 1
+    kubeadmextraconfig: '#none'
+    ssh_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBR91y/ZVuEkKW5/jqaffDP9R8bxpczPkfIB+n76i+hc
+      umetal@mgmt-01
+    debug_password_hash: $6$pqIIBAVQMBxXQIdx$Hyuo.FG5gmADPba3renKhKdMKy72YLDAN54Ja/fUUie55bEIEn42APyUe7I2U.uN2BIIqrgH79whS/CIhstHh.
+  worker:
+    machinecount: 1
+    ssh_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBR91y/ZVuEkKW5/jqaffDP9R8bxpczPkfIB+n76i+hc
+      umetal@mgmt-01
+    debug_password_hash: $6$pqIIBAVQMBxXQIdx$Hyuo.FG5gmADPba3renKhKdMKy72YLDAN54Ja/fUUie55bEIEn42APyUe7I2U.uN2BIIqrgH79whS/CIhstHh.
+  nodedraintimeout: 0s
+  networks:
+    eths_per_bond: 1
+    cluster_vlan_name: cluster0
+    cluster_vlan: 230
+    workload_vlan_name: workload0
+    workload_vlan: 240
+    bond_mode: balance-rr
+    default_gateway: 10.42.30.1
+    podcidr: 10.244.0.0/16
+    servicecidr: 10.96.0.0/12
+    loadbalancing_services:
+      start: 10.42.40.10
+      end: 10.42.40.29
+  nameserver: 10.42.30.1
+  apiendpoint:
+    host: 10.42.30.249
+    port: 6443
+  ip_pools:
+  - prefix: 24
+    start: 10.42.30.101
+    end: 10.42.30.150
+  workload_ip_pools:
+  - prefix: 24
+    start: 10.42.40.101
+    end: 10.42.40.150
+  static_files:
+    /etc/containers/registries.conf.d/proxy.conf: |+
+      [[registry]]
+      location = "docker.io"
+      insecure = false
+      blocked = false
+      [[registry.mirror]]
+      location = "10.0.0.173:5001/docker.io"
+      insecure = true
+
+
+      [[registry]]
+      location = "quay.io"
+      insecure = false
+      blocked = false
+      [[registry.mirror]]
+      location = "10.0.0.173:5001/quay.io"
+      insecure = true
+
+
+      [[registry]]
+      location = "registry.k8s.io"
+      insecure = false
+      blocked = false
+      [[registry.mirror]]
+      location = "10.0.0.173:5001/registry.k8s.io"
+      insecure = true
+
+
+      [[registry]]
+      location = "registry.gitlab.com"
+      insecure = false
+      blocked = false
+      [[registry.mirror]]
+      location = "10.0.0.173:5001/registry.gitlab.com"
+      insecure = true
+
+
+      [[registry]]
+      location = "registry.yaook.cloud"
+      insecure = false
+      blocked = false
+      [[registry.mirror]]
+      location = "10.0.0.173:5001/registry.yaook.cloud"
+      insecure = true
+
+
+      [[registry]]
+      location = "ghcr.io"
+      insecure = false
+      blocked = false
+      [[registry.mirror]]
+      location = "10.0.0.173:5001/ghcr.io"
+      insecure = true
+
+
+
+provisioning:
+  name: management
+  host:
+    interface: mgmt0
+    ip: 10.42.20.51
+    cluster_ip: 10.42.30.51
+    sshkey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBR91y/ZVuEkKW5/jqaffDP9R8bxpczPkfIB+n76i+hc
+      umetal@mgmt-01
+  cluster_cidr: 10.233.0.0/16
+  service_cidr: 10.96.0.0/16
+  dhcprange:
+    start: 10.42.20.101
+    end: 10.42.20.199
